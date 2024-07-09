@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy-Saving Improvement Submission</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            max-width: 600px;
+            margin: auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .error {
+            color: red;
+        }
+        .change-log {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        .change-log h2 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Submit an Energy-Saving Improvement</h1>
+    <form id="improvementForm">
+        <div class="form-group">
+            <label for="laName">Local Authority Name</label>
+            <input type="text" id="laName" name="laName" required>
+        </div>
+        <div class="form-group">
+            <label for="supplierName">Supplier Name</label>
+            <input type="text" id="supplierName" name="supplierName" required>
+        </div>
+        <div class="form-group">
+            <label for="installerName">Installer Name</label>
+            <input type="text" id="installerName" name="installerName" required>
+        </div>
+        <div class="form-group">
+            <label for="improvementDate">Improvement Date</label>
+            <input type="date" id="improvementDate" name="improvementDate" required>
+        </div>
+        <div class="form-group">
+            <label for="improvementType">Improvement Type</label>
+            <input type="text" id="improvementType" name="improvementType" required>
+        </div>
+        <div class="form-group">
+            <label for="propertyAddress">Property Address</label>
+            <input type="text" id="propertyAddress" name="propertyAddress" required>
+        </div>
+        <div class="form-group">
+            <label for="energySavings">Energy Savings (kWh)</label>
+            <input type="number" id="energySavings" name="energySavings" required>
+        </div>
+        <div class="form-group">
+            <label for="carbonSavings">Carbon Savings (kg CO2e)</label>
+            <input type="number" id="carbonSavings" name="carbonSavings" required>
+        </div>
+        <div class="form-group">
+            <label for="fundingAmount">Funding Amount (£)</label>
+            <input type="number" id="fundingAmount" name="fundingAmount" required>
+        </div>
+        <button type="button" onclick="saveDraft()">Save Draft</button>
+        <button type="button" onclick="loadDraft()">Load Draft</button>
+        <button type="button" onclick="submitForm()">Submit Improvement</button>
+        <p id="errorMsg" class="error"></p>
+    </form>
+
+    <div class="change-log">
+        <h2>Change Log</h2>
+        <ul id="changeLog"></ul>
+    </div>
+
+    <script>
+        // Mock database for already submitted improvements
+        const improvementsDatabase = [];
+        const changeLog = [];
+
+        // Mock user session
+        const currentUser = 'User1';
+
+        function saveDraft() {
+            const form = document.getElementById('improvementForm');
+            const formData = new FormData(form);
+            const draft = {};
+
+            formData.forEach((value, key) => {
+                draft[key] = value;
+            });
+
+            draft.savedBy = currentUser;
+            localStorage.setItem('improvementDraft', JSON.stringify(draft));
+            logChange(`Draft saved by ${currentUser}`);
+            alert('Draft saved successfully!');
+        }
+
+        function loadDraft() {
+            const draft = JSON.parse(localStorage.getItem('improvementDraft'));
+            if (draft) {
+                for (const key in draft) {
+                    if (draft.hasOwnProperty(key) && key !== 'savedBy') {
+                        document.getElementById(key).value = draft[key];
+                    }
+                }
+                logChange(`Draft loaded by ${currentUser} (saved by ${draft.savedBy})`);
+                alert('Draft loaded successfully!');
+            } else {
+                alert('No draft found.');
+            }
+        }
+
+        function submitForm() {
+            const form = document.getElementById('improvementForm');
+            const formData = new FormData(form);
+            const newImprovement = {};
+
+            formData.forEach((value, key) => {
+                newImprovement[key] = value;
+            });
+
+            // Check for duplicate improvements
+            const duplicate = improvementsDatabase.find(improvement => 
+                improvement.laName === newImprovement.laName &&
+                improvement.propertyAddress === newImprovement.propertyAddress &&
+                improvement.improvementDate === newImprovement.improvementDate &&
+                improvement.improvementType === newImprovement.improvementType
+            );
+
+            if (duplicate) {
+                document.getElementById('errorMsg').textContent = 'Duplicate improvement found. Please check your submission.';
+            } else {
+                newImprovement.submittedBy = currentUser;
+                improvementsDatabase.push(newImprovement);
+                localStorage.removeItem('improvementDraft'); // Clear draft on successful submission
+                logChange(`Improvement submitted by ${currentUser}`);
+                alert('Improvement submitted successfully!');
+                form.reset();
+                document.getElementById('errorMsg').textContent = '';
+            }
+        }
+
+        function logChange(message) {
+            changeLog.push({ message, timestamp: new Date().toLocaleString() });
+            const changeLogElement = document.getElementById('changeLog');
+            const logItem = document.createElement('li');
+            logItem.textContent = `${message} at ${changeLog[changeLog.length - 1].timestamp}`;
+            changeLogElement.appendChild(logItem);
+        }
+    </script>
+</body>
+</html>

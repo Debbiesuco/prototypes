@@ -1,0 +1,81 @@
+{% extends "layouts/main.html" %}
+
+{% block pageTitle %}
+  Question page template – {{ serviceName }} – GOV.UK Prototype Kit
+{% endblock %}
+
+{% block beforeContent %}
+  {{ govukBackLink({
+  text: "Back",
+  href: "javascript:window.history.back()"
+}) }}
+{% endblock %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">
+        Add a collaborator
+      </h1>
+
+      {% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+      {{ govukRadios({
+        name: "usertype",
+        value: data['usertype'],
+        fieldset: {
+          legend: {
+            text: "Choose their user type"
+          }
+        },
+        items: [
+          {
+            value: "local authority",
+            text: "Local Authority"
+          },
+          {
+            value: "energy supplier",
+            text: "Energy Supplier"
+          },
+          {
+            value: "installer",
+            text: "Installer"
+          }
+        
+        ]
+      }) }}
+
+      {% from "govuk/components/input/macro.njk" import govukInput %}
+
+      {{ govukInput({
+        label: {
+          text: "Email address"
+        },
+        hint: {
+          text: "We’ll only use this to send them a receipt"
+        },
+        id: "email-address",
+        name: "email-address",
+        value: data['email-address'],
+        type: "email",
+        autocomplete: "email",
+        spellcheck: false
+      }) }}
+
+
+      <form class="form" action="/success" method="post">
+
+
+        {{ govukButton({
+          text: "Confirm and send",
+          preventDoubleClick: true
+        }) }}
+
+      </form>
+
+    </div>
+  </div>
+
+{% endblock %}

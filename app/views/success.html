@@ -1,0 +1,44 @@
+{% extends "layouts/main.html" %}
+
+{% block pageTitle %}
+  Confirmation page template – {{ serviceName }} – GOV.UK Prototype Kit
+{% endblock %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {{ govukPanel({
+        titleText: "Collaborator added"
+      }) }}
+
+      <p>
+        We have sent them a confirmation email.
+      </p>
+
+      <h2 class="govuk-heading-m">
+        What happens next
+      </h2>
+
+      <p>
+        Reach out to the collaborator you've added to let them know that a mail has been sent to them.
+      </p>
+
+      <p>
+        Once they've accepted the invite, they will be able to collaborate with you on the form before submitting.
+      </p>
+
+
+      {% from "govuk/components/button/macro.njk" import govukButton %}
+
+      {{ govukButton({
+        text: "Continue to dashboard",
+        href: "/dashboard"
+      }) }}
+
+
+    </div>
+  </div>
+
+{% endblock %}

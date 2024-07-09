@@ -1,0 +1,99 @@
+{% extends "layouts/main.html" %}
+
+{% block pageTitle %}
+  Question page template – {{ serviceName }} – GOV.UK Prototype Kit
+{% endblock %}
+
+{% block beforeContent %}
+  {{ govukBackLink({
+  text: "Back",
+  href: "javascript:window.history.back()"
+}) }}
+{% endblock %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">
+        Create an account
+      </h1>
+
+
+
+      {% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+          {{ govukRadios({
+            name: "usertype",
+            value: data['usertype'],
+            fieldset: {
+              legend: {
+                text: "Choose your user type"
+              }
+            },
+            items: [
+              {
+                value: "local authority",
+                text: "Local Authority"
+              },
+              {
+                value: "energy supplier",
+                text: "Energy Supplier"
+              },
+              {
+                value: "installer",
+                text: "Installer"
+              }
+            
+            ]
+          }) }}
+
+      {% from "govuk/components/input/macro.njk" import govukInput %}
+
+        {{ govukInput({
+          label: {
+            text: "Email address"
+          },
+          hint: {
+            text: "We’ll only use this to send you a receipt"
+          },
+          id: "email",
+          name: "email",
+          type: "email",
+          autocomplete: "email",
+          spellcheck: false
+        }) }}
+
+
+        {% from "govuk/components/password-input/macro.njk" import govukPasswordInput %}
+
+        {{ govukPasswordInput({
+          label: {
+            text: "Password"
+          },
+          id: "password-input",
+          name: "password"
+        }) }}
+
+
+
+      <form class="form" action="/path/of/next/page" method="post">
+
+        <!-- <p>
+          [Insert question content here - see the
+          <a href="https://design-system.service.gov.uk">GOV.UK Design System</a>
+          for examples]
+        </p> -->
+
+        {{ govukButton({
+          text: "Continue",
+          href: "/dashboard"
+        }) }}
+
+      </form>
+
+    </div>
+  </div>
+
+{% endblock %}

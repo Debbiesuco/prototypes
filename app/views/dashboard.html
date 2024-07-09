@@ -1,0 +1,55 @@
+{% extends "layouts/main.html" %}
+
+{% block pageTitle %}
+  GOV.UK page template – {{ serviceName }} – GOV.UK Prototype Kit
+{% endblock %}
+
+
+{% block content %}
+
+<p class="govuk-body">
+  <a href="/add-collaborator" class="govuk-link govuk-link--no-visited-state">Add collaborators</a>
+</p>
+
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+
+{{ govukInsetText({
+  text: "Collaborators added will appear here. You can use the button below
+          to submit energy-saving improvements."
+}) }}
+
+      {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+      {{ govukSummaryList({
+        rows: [
+          {
+            key: {
+              text: "Collaborator 1"
+            },
+            value: {
+              text: ""
+            }
+          },
+          {
+            key: {
+              text: "Collaborator 2"
+            },
+            value: {
+              text:  data['email-address']
+            }
+          }
+    
+    
+        ]
+      }) }}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{{ govukButton({
+  text: "Fill a form",
+  href: "/question1",
+  isStartButton: true
+}) }}
+
+
+{% endblock %}
